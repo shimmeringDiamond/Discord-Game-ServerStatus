@@ -2,17 +2,18 @@
   "name": "src",
   "version": "1.0.0",
   "description": "a discord bot to get minecraft server information",
-  "main": "main.js",
+  "main": "main.ts",
   "type": "module",
   "scripts": {
-    "test": "node main.js"
+    "test": "node main.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "discord-api-types": "^0.37.90",
     "discord.js": "^14.15.3",
-    "mongodb": "^6.7.0"
+    "mongodb": "^6.7.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "typescript": "^5.5.2"

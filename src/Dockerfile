@@ -12,4 +12,4 @@ RUN npm install
 COPY . .
 
 # Run the command to start the bot
-CMD ["node", "main.js"]
+CMD ["node", "main.ts"]

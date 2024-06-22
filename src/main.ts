@@ -2,8 +2,8 @@ import {ApplicationCommand, ApplicationCommandManager, REST, Routes} from 'disco
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import {EmbedBuilder} from "discord.js";
 
-import {McStatusCommand, executeMcStatus} from "./commands/McStatus.js";
-import {AddServerCommand, executeAddServer} from "./commands/AddServer.js";
+import {McStatusCommand, executeMcStatus} from "./commands/ServerStatus";
+import {AddServerCommand, executeAddServer} from "./commands/AddServer";
 
 const commands= [AddServerCommand, McStatusCommand];
 
