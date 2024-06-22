@@ -1,0 +1,16 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "a discord bot to get minecraft server information",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "mongodb": "^6.7.0"
+  }
+}
