@@ -10,7 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord-api-types": "^0.37.90",
     "discord.js": "^14.15.3",
     "mongodb": "^6.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
   }
 }
