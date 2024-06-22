@@ -5,7 +5,7 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "test": "node main.ts"
+    "start": "tsc && node ../build/main.js"
   },
   "author": "",
   "license": "ISC",
