@@ -2,8 +2,8 @@ import {ApplicationCommand, ApplicationCommandManager, REST, Routes} from 'disco
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import {EmbedBuilder} from "discord.js";
 
-import {McStatusCommand, executeMcStatus} from "./commands/ServerStatus";
-import {AddServerCommand, executeAddServer} from "./commands/AddServer";
+import {McStatusCommand, interactionMcStatus} from "./commands/ServerStatus.js";
+import {AddServerCommand, interactionAddServer} from "./commands/AddServer.js";
 
 const commands= [AddServerCommand, McStatusCommand];
 
@@ -23,8 +23,8 @@ client.on(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on(Events.InteractionCreate, executeMcStatus);
-client.on(Events.InteractionCreate, executeAddServer);
+client.on(Events.InteractionCreate, interactionMcStatus);
+client.on(Events.InteractionCreate, interactionAddServer);
 
 
 client.login(process.env.DISCORD_TOKEN);

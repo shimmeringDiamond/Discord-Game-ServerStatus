@@ -1,12 +1,11 @@
-import * as sqlite3 from 'sqlite3';
-import {ServerTypes} from "../gameServers/serverTypes";
-//TODO: add db integration
-const db = new sqlite3.Database('database.sqlite');
+import sqlite3 from 'sqlite3';
+const { Database } = sqlite3;import {ServerTypes} from "../gameServers/serverTypes.js";
+
+const db = new Database('storage/database.sqlite');
 
 export async function UpdateOrAddGuild(guildId: string, defaultURL: string = ""): Promise<void> {
     return new Promise((resolve, reject) => {
         db.serialize(() => {
-            // Check if the guild already exists
             db.get(`SELECT *
                     FROM Guilds
                     WHERE Id = ?`, [guildId], (err, row) => {
@@ -15,7 +14,6 @@ export async function UpdateOrAddGuild(guildId: string, defaultURL: string = "")
                 }
 
                 if (row) {
-                    // Guild exists, update the defaultURL
                     db.run(`UPDATE Guilds
                             SET defaultServer = ?
                             WHERE Id = ?`, [defaultURL, guildId], (err) => {
@@ -25,7 +23,6 @@ export async function UpdateOrAddGuild(guildId: string, defaultURL: string = "")
                         resolve();
                     });
                 } else {
-                    // Guild does not exist, insert a new record
                     db.run(`INSERT INTO Guilds (Id, defaultServer)
                             VALUES (?, ?)`, [guildId, defaultURL], (err) => {
                         if (err) {
@@ -38,31 +35,28 @@ export async function UpdateOrAddGuild(guildId: string, defaultURL: string = "")
         });
     });
 }
-export async function UpdateOrAddServer(guildId: string, URL: string, type: ServerTypes): Promise<void> {
+export async function UpdateOrAddGuildServer(guildId: string, URL: string, type: ServerTypes): Promise<void> {
     return new Promise((resolve, reject) => {
         db.serialize(() => {
-            // Check if the guild already exists
             db.get(`SELECT *
                     FROM GuildServer
-                    WHERE GuildId = ?`, [guildId], (err, row) => {
+                    WHERE GuildId = ? AND URL = ?`, [guildId, URL], (err, row) => {
                 if (err) {
                     return reject(`Error retrieving guild: ${err.message}`);
                 }
 
                 if (row) {
-                    // Guild exists, update the defaultURL
-                    db.run(`UPDATE Servers
-                            SET URL = ?
-                            WHERE Type = ?`, [URL, guildId], (err) => {
+                    db.run(`UPDATE GuildServer
+                            SET Typpe = ?
+                            WHERE GuildId = ? AND URL = ?`, [type, guildId, URL], (err) => {
                         if (err) {
                             return reject(`Error updating guild: ${err.message}`);
                         }
                         resolve();
                     });
                 } else {
-                    // Guild does not exist, insert a new record
-                    db.run(`INSERT INTO Guilds (Id, defaultServer)
-                            VALUES (?, ?)`, [guildId, defaultURL], (err) => {
+                    db.run(`INSERT INTO GuildServer (GuildId, URL, Type)
+                            VALUES (?, ?, ?)`, [guildId, URL, type], (err) => {
                         if (err) {
                             return reject(`Error adding new guild: ${err.message}`);
                         }

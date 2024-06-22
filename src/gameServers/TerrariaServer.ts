@@ -1,6 +1,6 @@
 import {EmbedBuilder} from "discord.js";
 
-export const getEmbed(serverUrl: string): EmbedBuilder {
+export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
     const serverInfo = await fetch(`https://api.mcsrvstat.us/3/${serverUrl}`);
     const serverData = await serverInfo.json();
 

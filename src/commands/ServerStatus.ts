@@ -8,13 +8,13 @@ import {
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
-import {functionMap, ServerTypes} from "../gameServers/serverTypes";
+import {functionMap, ServerTypes} from "../gameServers/serverTypes.js";
 
 export const McStatusCommand = new SlashCommandBuilder()
     .setName('server-status')
     .setDescription('Provides information about a particular Minecraft Server');
 
-export async function executeMcStatus(interaction) {
+export async function interactionMcStatus(interaction) {
     if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'server-status') {

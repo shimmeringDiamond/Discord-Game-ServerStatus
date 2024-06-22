@@ -1,8 +1,8 @@
 import {EmbedBuilder} from "discord.js";
-import {getEmbed as mcGetEmbed} from "./MinecraftServer";
-import {getEmbed as terrGetEmbed} from "./TerrariaServer";
+import {getEmbed as mcGetEmbed} from "./MinecraftServer.js";
+import {getEmbed as terrGetEmbed} from "./TerrariaServer.js";
 interface FunctionMap {
-    [key: string]: (serverUrl: string) => EmbedBuilder;
+    [key: string]: (serverUrl: string) => Promise<EmbedBuilder>;
 }
 export enum ServerTypes {
     Terraria = "Terraria",
