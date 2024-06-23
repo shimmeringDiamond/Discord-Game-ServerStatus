@@ -1,29 +1,25 @@
-import {SlashCommandBuilder} from "discord.js";
+import {PermissionFlagsBits, SlashCommandBuilder} from "discord.js";
 import {UpdateOrAddGuild, UpdateOrAddGuildServer} from "../storage/Db.js";
 import {Server, ServerTypes} from "../gameServers/serverTypes.js";
-import {GetServerChoices} from "./common.js";
+import {GetServerChoices, TryGetServer} from "./common.js";
 
 export const DefaultServerCommand = new SlashCommandBuilder()
     .setName('default-server')
-    .setDescription('Adds a new server url')
+    .setDescription('Sets a server as the default for server-status')
     .addStringOption(option =>
         option.setName('server')
             .setDescription('The server to set as default.')
             .setRequired(true)
             .setAutocomplete(true)
-
     )
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export async function interactionDefaultServer(interaction) {
     if (interaction.isChatInputCommand() && interaction.commandName === 'default-server') {
-        let server: Server = {URL: "", Type: ServerTypes.Minecraft}; //defining server just to make the compiler happy
-        try {
-           server = JSON.parse(interaction.options.getString('server'));
-        }
-        catch{
-            return interaction.reply({content: `Please pick one of the options.`, ephemeral: true});
-        }
 
+        let tryResult = TryGetServer(interaction);
+        let server = tryResult.server;
+        if (tryResult.result == false) {return}
 
         await UpdateOrAddGuild(interaction.guildId, server.URL);
         UpdateOrAddGuildServer(interaction.guildId, server)
@@ -35,7 +31,7 @@ export async function interactionDefaultServer(interaction) {
                 return interaction.reply({content: `Could not add the default server, how did you get here???`, ephemeral: true})
             })
     }
-    if (interaction.isAutocomplete() && interaction.commandName === 'default-server') {
+    else if (interaction.isAutocomplete() && interaction.commandName === 'default-server') {
         interaction.respond(await GetServerChoices(interaction.guildId))
     }
     else {

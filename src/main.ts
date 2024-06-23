@@ -5,10 +5,11 @@ import {EmbedBuilder} from "discord.js";
 import {McStatusCommand, interactionMcStatus} from "./commands/ServerStatus.js";
 import {AddServerCommand, interactionAddServer} from "./commands/AddServer.js";
 import {DefaultServerCommand, interactionDefaultServer} from "./commands/DefaultServer.js";
+import {DeleteServerCommand, interactionDeleteServer} from "./commands/DeleteServer.js";
 
 import {UpdateOrAddGuild} from "./storage/Db.js";
 
-const commands= [AddServerCommand, McStatusCommand, DefaultServerCommand];
+const commands= [AddServerCommand, McStatusCommand, DefaultServerCommand, DeleteServerCommand];
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
@@ -32,6 +33,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.InteractionCreate, interactionMcStatus);
 client.on(Events.InteractionCreate, interactionAddServer);
 client.on(Events.InteractionCreate, interactionDefaultServer);
+client.on(Events.InteractionCreate, interactionDeleteServer);
 
 
 client.login(process.env.DISCORD_TOKEN);

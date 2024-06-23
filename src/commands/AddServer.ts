@@ -1,4 +1,4 @@
-import {InteractionType, SlashCommandBuilder} from "discord.js";
+import {InteractionType, PermissionFlagsBits, SlashCommandBuilder} from "discord.js";
 import {Server, ServerTypes} from "../gameServers/serverTypes.js";
 import {UpdateOrAddGuild, UpdateOrAddGuildServer} from "../storage/Db.js";
 import {ChoiceOption} from "./common";
@@ -22,8 +22,8 @@ export const AddServerCommand = new SlashCommandBuilder()
             .setDescription('The game that this server hosts.')
             .setRequired(true)
             .addChoices(choices)
-
     )
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export async function interactionAddServer(interaction) {
     if (!interaction.isChatInputCommand()) return;
@@ -33,12 +33,11 @@ export async function interactionAddServer(interaction) {
             Type: interaction.options.getString('game')
         };
         UpdateOrAddGuildServer(interaction.guildId, server)
-            .then(statusMessgae => {
-                return interaction.reply({content: `Added `, empheral: true});
+            .then(() => {
+                return interaction.reply({content: `Added ${server.URL}`, ephemeral: true});
             })
             .catch(error => {
                 console.error(error);
-                return interaction.reply({})
             })
     }
 }

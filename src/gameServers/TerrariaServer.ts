@@ -1,15 +1,7 @@
 import {EmbedBuilder} from "discord.js";
 
 export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
-    const serverInfo = await fetch(`https://api.mcsrvstat.us/3/${serverUrl}`);
-    const serverData = await serverInfo.json();
 
-    //.setImage(getLogoUrl());
     return new EmbedBuilder()
-        .setTitle(`Minecraft Server Info: `)
-        .addFields([
-            {name: 'Server Name', value: serverData.hostname},
-            {name: 'Online Players', value: `${serverData.players.online}`},
-            {name: 'Max Players', value: `${serverData.players.max}`},
-        ]);
+        .setDescription("Whoops: Terraria servers aren't implemented yet.");
 }

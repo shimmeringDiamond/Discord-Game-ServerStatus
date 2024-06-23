@@ -24,7 +24,7 @@ export async function UpdateOrAddGuild(guildId: string, defaultURL: string = "")
                         }
                         resolve();
                     });
-                } else {
+                } else if (!row) {
                     db.run(`INSERT INTO Guilds (Id, defaultServer)
                             VALUES (?, ?)`, [guildId, defaultURL], (err) => {
                         if (err) {
@@ -80,10 +80,10 @@ export async function GetServers(guildId: string): Promise<Server[]> {
                 return reject(`Error retrieving guildServer: ${err.message}`)
             }
             if (rows) {
-                rows.forEach(({URL, Type}) => {
+                rows.forEach((row) => {
                     const server: Server = {
-                        URL: URL,
-                        Type: Type
+                        URL: row["URL"],
+                        Type: row["Type"]
                     };
                     servers.push(server);
                 });
@@ -127,4 +127,35 @@ export async function GetDefaultServer(guildId: string): Promise<Server> {
             })
         })
     })
+}
+export async function RemoveServer(guildId: string, server: Server): Promise<void> {
+    return new Promise((resolve, reject) => {
+        db.serialize(() => {
+            db.get(`SELECT *
+                FROM Guilds
+                WHERE Id = ?`, [guildId], (err, row) => {
+            if (err) {
+                return reject(`Error selecting from Guilds`);
+            }
+            if (row && row["defaultServer"] == server.URL) {
+                db.run(`UPDATE Guilds
+                    SET defaultServer = ?
+                    WHERE GuildId = ?`, ["", guildId], (err) => {
+                if (err) {
+                    return reject('Error resetting defaultServer');
+                }
+                });
+            }
+            });
+            db.run(`DELETE
+                FROM GuildServer
+                WHERE GuildId = ? AND URL = ?`, [guildId, server.URL], (err) => {
+            if (err) {
+                return reject(`Error deleting row for guildId: ${guildId}, URL: ${server.URL}`)
+            }
+            resolve();
+            })
+        })
+    })
+
 }

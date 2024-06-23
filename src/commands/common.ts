@@ -1,5 +1,6 @@
 import {GetServers} from "../storage/Db.js";
 import {SelectMenuBuilder, SlashCommandBuilder, StringSelectMenuOptionBuilder} from "discord.js";
+import {Server, ServerTypes} from "../gameServers/serverTypes.js";
 
 
 export type ChoiceOption = {
@@ -24,4 +25,17 @@ export async function GetServerChoices(guildId: string): Promise<ChoiceOption[]>
         option.push({name: `${server.URL}, ${server.Type}`, value: JSON.stringify(server)});
     })
     return option;
+}
+
+export function TryGetServer(interaction): {server: Server, result: boolean} {
+    let server: Server = {URL: "", Type: ServerTypes.Minecraft}; //defining server just to make the compiler happy
+    try {
+        server = JSON.parse(interaction.options.getString('server'));
+        return {server: server, result: true};
+    }
+    catch{
+        interaction.reply({content: `Please pick one of the options.`, ephemeral: true});
+        return {server: server, result: false};
+    }
+
 }

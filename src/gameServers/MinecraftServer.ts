@@ -4,14 +4,28 @@ export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
     const serverInfo = await fetch(`https://api.mcsrvstat.us/3/${serverUrl}`);
     const serverData = await serverInfo.json();
 
+    const embed = new EmbedBuilder()
+        .setTitle(`Info for Minecraft Server: ${serverUrl}`);
+
+    if (!serverData.online) {
+        embed.setDescription(`Server url invalid or server is offline`);
+    }
+    else {
+        embed
+            .setColor(0x0099FF)
+            .setTitle(`Info for Minecraft Server: ${serverUrl}`)
+            .addFields([
+                {name: 'Server Name', value: serverData.hostname},
+                { name: '\u200B', value: '\u200B' },
+                {name: 'Online Players', value: `${serverData.players.online}`, inline: true},
+                {name: 'Max Players', value: `${serverData.players.max}`, inline: true},
+                {name: 'Version', value: `${serverData.version}`},
+                {name: 'Motd', value: `${serverData.motd.clean[0]}`}
+            ]);
+    }
     //.setImage(getLogoUrl());
-    return new EmbedBuilder()
-        .setTitle(`Info for Minecraft Server: ${serverUrl}`)
-        .addFields([
-            {name: 'Server Name', value: serverData.hostname},
-            {name: 'Online Players', value: `${serverData.players.online}`},
-            {name: 'Max Players', value: `${serverData.players.max}`},
-        ]);
+    return embed;
+
 }
 
 function getLogoUrl(iconString) {
