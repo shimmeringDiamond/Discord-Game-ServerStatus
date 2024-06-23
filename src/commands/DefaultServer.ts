@@ -1,6 +1,5 @@
 import {PermissionFlagsBits, SlashCommandBuilder} from "discord.js";
 import {UpdateOrAddGuild, UpdateOrAddGuildServer} from "../storage/Db.js";
-import {Server, ServerTypes} from "../gameServers/serverTypes.js";
 import {GetServerChoices, TryGetServer} from "./common.js";
 
 export const DefaultServerCommand = new SlashCommandBuilder()
@@ -12,7 +11,7 @@ export const DefaultServerCommand = new SlashCommandBuilder()
             .setRequired(true)
             .setAutocomplete(true)
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
 
 export async function interactionDefaultServer(interaction) {
     if (interaction.isChatInputCommand() && interaction.commandName === 'default-server') {
@@ -23,7 +22,7 @@ export async function interactionDefaultServer(interaction) {
 
         await UpdateOrAddGuild(interaction.guildId, server.URL);
         UpdateOrAddGuildServer(interaction.guildId, server)
-            .then(statusMessgae => {
+            .then(() => {
                 return interaction.reply({content: `Added ${server.URL} as the default server`, ephemeral: true});
             })
             .catch(error => {

@@ -11,7 +11,7 @@ export const DeleteServerCommand = new SlashCommandBuilder()
             .setRequired(true)
             .setAutocomplete(true)
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
 
 export async function  interactionDeleteServer(interaction) {
     if (interaction.isChatInputCommand() && interaction.commandName === 'delete-server') {
