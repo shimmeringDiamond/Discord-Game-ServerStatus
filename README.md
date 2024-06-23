@@ -1,4 +1,4 @@
-# Discord-ServerStatus
+# Discord-Game-ServerStatus
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/diamondcoder295/discord-minecraft-bot.svg)](https://hub.docker.com/r/diamondcoder295/discord-minecraft-bot)
 
