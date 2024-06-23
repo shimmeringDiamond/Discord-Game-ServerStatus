@@ -1,14 +1,11 @@
 import {InteractionType, SlashCommandBuilder} from "discord.js";
-import {ServerTypes} from "../gameServers/serverTypes.js";
+import {Server, ServerTypes} from "../gameServers/serverTypes.js";
 import {UpdateOrAddGuild, UpdateOrAddGuildServer} from "../storage/Db.js";
-
-type Option = {
-    name: string;
-    value: string;
-};
+import {ChoiceOption} from "./common";
 
 
-const choices: Option[] = [];
+
+const choices: ChoiceOption[] = [];
 Object.values(ServerTypes).forEach((serverType) => {
     choices.push({name: serverType, value: serverType})
 })
@@ -29,16 +26,21 @@ export const AddServerCommand = new SlashCommandBuilder()
     )
 
 export async function interactionAddServer(interaction) {
-    await UpdateOrAddGuild(interaction.guildId);
-    UpdateOrAddGuildServer(interaction.guildId, interaction.options.getString('host'), interaction.options.getString('game'))
-        .then(statusMessgae => {
-            return interaction.reply({content: `Added `, empheral: true});
-        })
-        .catch(error => {
-            console.error(error);
-            return interaction.reply({})
-        })
-
+    if (!interaction.isChatInputCommand()) return;
+    if (interaction.commandName === 'add-server') {
+        const server: Server = {
+            URL: interaction.options.getString('host'),
+            Type: interaction.options.getString('game')
+        };
+        UpdateOrAddGuildServer(interaction.guildId, server)
+            .then(statusMessgae => {
+                return interaction.reply({content: `Added `, empheral: true});
+            })
+            .catch(error => {
+                console.error(error);
+                return interaction.reply({})
+            })
+    }
 }
 
 

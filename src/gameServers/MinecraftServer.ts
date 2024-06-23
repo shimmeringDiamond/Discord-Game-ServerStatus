@@ -6,7 +6,7 @@ export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
 
     //.setImage(getLogoUrl());
     return new EmbedBuilder()
-        .setTitle(`Minecraft Server Info: `)
+        .setTitle(`Info for Minecraft Server: ${serverUrl}`)
         .addFields([
             {name: 'Server Name', value: serverData.hostname},
             {name: 'Online Players', value: `${serverData.players.online}`},

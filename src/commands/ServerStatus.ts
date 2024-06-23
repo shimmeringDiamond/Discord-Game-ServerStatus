@@ -1,14 +1,13 @@
-// @ts-ignore
-// @ts-ignore
 import {
     ActionRowBuilder,
-    ComponentType,
-    EmbedBuilder,
+    ComponentType, EmbedBuilder,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
-import {functionMap, ServerTypes} from "../gameServers/serverTypes.js";
+import {functionMap, Server, ServerTypes} from "../gameServers/serverTypes.js";
+import {GetDefaultServer, GetServers, UpdateOrAddGuild, UpdateOrAddGuildServer} from "../storage/Db.js";
+import {AddServerSelectMenu} from "./common.js";
 
 export const McStatusCommand = new SlashCommandBuilder()
     .setName('server-status')
@@ -16,35 +15,37 @@ export const McStatusCommand = new SlashCommandBuilder()
 
 export async function interactionMcStatus(interaction) {
     if (!interaction.isChatInputCommand()) return;
-
     if (interaction.commandName === 'server-status') {
 
-        //get default url and servertype from db
-        const select = new StringSelectMenuBuilder()// populate with db
+        const select = new StringSelectMenuBuilder()
             .setCustomId('select-server')
-            .addOptions(
-                new StringSelectMenuOptionBuilder()
-                    .setLabel('Option')
-                    .setValue('option')
-                    .setDescription('A selectable option')
-                    .setDefault(true),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel('OBption')
-                    .setValue('boption')
-                    .setDescription('A selectable option')
-            );
+            .setPlaceholder('Select a server')
+        await AddServerSelectMenu(interaction.guildId, select);
+
         const row = new ActionRowBuilder()
             .addComponents(select);
 
+        let embed: EmbedBuilder = new EmbedBuilder();
+        try {
+            const defaultServer = await GetDefaultServer(interaction.guildId)
+
+            embed = await functionMap[defaultServer.Type](defaultServer.URL)
+        }
+        catch {
+            embed = new EmbedBuilder()
+                .setDescription('Could not find default server, Did you set one?');
+        }
+
         const response = await interaction.reply({
-            embeds: ["functionmap it"], //get default
+            embeds: [embed],
             components: [row],
         });
 
         const collector = response.createMessageComponentCollector({componentType: ComponentType.StringSelect , time: 3_600_000});
 
         collector.on('collect', async i => {
-            await i.update({embeds: [await functionMap["get whether it is mc or not from db"](i.value)]});
+            const server: Server = JSON.parse(i.values[0])
+            await i.update({embeds: [await functionMap[server.Type](server.URL)]});
         });
 
 

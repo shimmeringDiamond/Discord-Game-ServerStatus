@@ -4,8 +4,11 @@ import {EmbedBuilder} from "discord.js";
 
 import {McStatusCommand, interactionMcStatus} from "./commands/ServerStatus.js";
 import {AddServerCommand, interactionAddServer} from "./commands/AddServer.js";
+import {DefaultServerCommand, interactionDefaultServer} from "./commands/DefaultServer.js";
 
-const commands= [AddServerCommand, McStatusCommand];
+import {UpdateOrAddGuild} from "./storage/Db.js";
+
+const commands= [AddServerCommand, McStatusCommand, DefaultServerCommand];
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
@@ -23,8 +26,12 @@ client.on(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+client.on(Events.InteractionCreate, async (interaction) => {
+    await UpdateOrAddGuild(interaction.guildId);
+});
 client.on(Events.InteractionCreate, interactionMcStatus);
 client.on(Events.InteractionCreate, interactionAddServer);
+client.on(Events.InteractionCreate, interactionDefaultServer);
 
 
 client.login(process.env.DISCORD_TOKEN);

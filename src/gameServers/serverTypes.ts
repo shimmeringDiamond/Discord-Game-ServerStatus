@@ -8,7 +8,10 @@ export enum ServerTypes {
     Terraria = "Terraria",
     Minecraft = "Minecraft",
 }
-
+export interface Server {
+    URL: string,
+    Type: ServerTypes,
+}
 export const functionMap: FunctionMap = {
     [ServerTypes.Terraria]: (serverUrl) => terrGetEmbed(serverUrl),
     [ServerTypes.Minecraft]: (serverUrl) => mcGetEmbed(serverUrl),
