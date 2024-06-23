@@ -11,17 +11,24 @@ export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
         embed.setDescription(`Server url invalid or server is offline`);
     }
     else {
-        embed
-            .setColor(0x0099FF)
-            .setTitle(`Info for Minecraft Server: ${serverUrl}`)
-            .addFields([
-                {name: 'Server Name', value: serverData.hostname},
-                { name: '\u200B', value: '\u200B' },
-                {name: 'Online Players', value: `${serverData.players.online}`, inline: true},
-                {name: 'Max Players', value: `${serverData.players.max}`, inline: true},
-                {name: 'Version', value: `${serverData.version}`},
-                {name: 'Motd', value: `${serverData.motd.clean[0]}`}
-            ]);
+        try{
+            embed
+                .setColor(0x0099FF)
+                .setTitle(`Info for Minecraft Server: ${serverUrl}`)
+                .addFields([
+                    {name: 'Server Name', value: serverData.hostname},
+                    { name: '\u200B', value: '\u200B' },
+                    {name: 'Online Players', value: `${serverData.players.online}`, inline: true},
+                    {name: 'Max Players', value: `${serverData.players.max}`, inline: true},
+                    {name: 'Version', value: `${serverData.version}`},
+                    {name: 'Motd', value: `${serverData.motd.clean[0]}`}
+                ]);
+        }
+        catch {
+            embed
+                .setDescription(`Getting info failed :(`)
+        }
+
     }
     //.setImage(getLogoUrl());
     return embed;
