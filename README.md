@@ -3,7 +3,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/diamondcoder295/discord-minecraft-bot.svg)](https://hub.docker.com/r/diamondcoder295/discord-minecraft-bot)
 
 A bot that gives game server status info via command, primary focus is minecraft servers for now.
-Commands are stored on a per-guild basis. This may change in the future.
+servers are stored on a per-guild basis. This may change to a per channel or other custom configuration in the future.
 ![img.png](readme/img.png)
 
 ## Commands
@@ -15,7 +15,7 @@ Commands are stored on a per-guild basis. This may change in the future.
 ## Preparing Docker container
 You need to specify the `CLIENT_ID` and `DISCORD_TOKEN` environment variables. You also need to 
 mount a volume with a `database.sqlite` file inside it to `/app/storage` inside the container.
-There is an empty template database inside src/storage you can copy.
+There is an empty template database inside `src/storage` you can copy.
 
 Example docker-compose.yml:
 ```yaml
