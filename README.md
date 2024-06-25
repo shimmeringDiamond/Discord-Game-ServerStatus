@@ -32,7 +32,7 @@ services:
 
 ## Running Locally
 You can also run without containerization. Just clone the repo then copy `src/storage/database-template.sqlite`
-to `storage/database.sqlite` then you can set your environment variables as described in the docker section and then run `npm run start`
+to `storage/database.sqlite` then you can set your environment variables as described in the docker section and then run `npm install` and `npm run start`
 
 ## Future features
 Im looking to integrate Terraria and maybe other game servers, the code is already ready to accept
