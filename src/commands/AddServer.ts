@@ -11,7 +11,7 @@ Object.values(ServerTypes).forEach((serverType) => {
 })
 export const AddServerCommand = new SlashCommandBuilder()
     .setName('add-server')
-    .setDescription('Adds a new server url')
+    .setDescription('Adds a new server')
     .addStringOption(option =>
         option.setName('host')
             .setDescription('The URL or hostname of the game server.')
@@ -23,18 +23,26 @@ export const AddServerCommand = new SlashCommandBuilder()
             .setRequired(true)
             .addChoices(choices)
     )
+    .addStringOption(option =>
+        option.setName('alias')
+            .setDescription('A friendly name to refer to the server as')
+            .setRequired(false)
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
 
 export async function interactionAddServer(interaction) {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === 'add-server') {
         const server: Server = {
-            URL: interaction.options.getString('host'),
-            Type: interaction.options.getString('game')
+            URL: interaction.options.getString('host').trim(),
+            Type: interaction.options.getString('game').trim(),
         };
+        if (interaction.options.get('alias')) {
+            server.Alias = interaction.options.getString('alias')
+        }
         UpdateOrAddGuildServer(interaction.guildId, server)
             .then(() => {
-                return interaction.reply({content: `Added ${server.URL}`, ephemeral: true});
+                return interaction.reply({content: `Added ${server.URL} ${server.Alias? `as ${server.Alias}` : ''}`, ephemeral: true});
             })
             .catch(error => {
                 console.error(error);

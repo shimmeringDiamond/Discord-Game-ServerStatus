@@ -17,7 +17,7 @@ export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
                 .setTitle(`Info for Minecraft Server: ${serverUrl}`)
                 .addFields([
                     {name: 'Server Name', value: serverData.hostname},
-                    { name: '\u200B', value: '\u200B' },
+                    {name: '\u200B', value: '\u200B' },
                     {name: 'Online Players', value: `${serverData.players.online}`, inline: true},
                     {name: 'Max Players', value: `${serverData.players.max}`, inline: true},
                     {name: 'Version', value: `${serverData.version}`},
@@ -35,9 +35,9 @@ export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
 
 }
 
-function getLogoUrl(iconString) {
+/*function getLogoUrl(iconString) {
     var img = new Image();
-    /*const base64Data = serverData.icon.split(",")[1];
+    const base64Data = serverData.icon.split(",")[1];
         const mimeType = serverData.icon.split(":")[1].split(";")[0];
         const blob = new Blob([atob(base64Data)], {type: mimeType})
 
@@ -51,6 +51,6 @@ function getLogoUrl(iconString) {
             body: formData
         })
             .then(response => response.json())
-            .then(data => console.log(data));*/
+            .then(data => console.log(data));
     return ""
-}
+}*/

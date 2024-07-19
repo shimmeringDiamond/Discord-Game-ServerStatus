@@ -1,5 +1,5 @@
 import {GetServers} from "../storage/Db.js";
-import {SelectMenuBuilder, SlashCommandBuilder, StringSelectMenuOptionBuilder} from "discord.js";
+import {SelectMenuBuilder, StringSelectMenuOptionBuilder} from "discord.js";
 import {Server, ServerTypes} from "../gameServers/serverTypes.js";
 
 
@@ -22,7 +22,7 @@ export async function GetServerChoices(guildId: string): Promise<ChoiceOption[]>
     const option: ChoiceOption[] = [];
     const servers = await GetServers(guildId);
     servers.forEach((server) => {
-        option.push({name: `${server.URL}, ${server.Type}`, value: JSON.stringify(server)});
+        option.push({name: `${server.Alias?? ''}, ${server.URL}, ${server.Type}`, value: JSON.stringify(server)});
     })
     return option;
 }

@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';
-import {Server, ServerTypes} from '../gameServers/serverTypes'
+import {Server} from '../gameServers/serverTypes'
 
 const { Database } = sqlite3;
 
@@ -49,16 +49,16 @@ export async function UpdateOrAddGuildServer(guildId: string, server: Server): P
 
                 if (row) {
                     db.run(`UPDATE GuildServer
-                            SET Type = ?
-                            WHERE GuildId = ? AND URL = ?`, [server.Type, guildId, server.URL], (err) => {
+                            SET Type = ?, Alias = ?
+                            WHERE GuildId = ? AND URL = ?`, [server.Type, server.Alias?? null,guildId, server.URL], (err) => {
                         if (err) {
                             return reject(`Error updating guildServer: ${err.message}`);
                         }
                         resolve();
                     });
                 } else {
-                    db.run(`INSERT INTO GuildServer (GuildId, URL, Type)
-                            VALUES (?, ?, ?)`, [guildId, server.URL, server.Type], (err) => {
+                    db.run(`INSERT INTO GuildServer (GuildId, URL, Type, Alias)
+                            VALUES (?, ?, ?, ?)`, [guildId, server.URL, server.Type, server.Alias?? null], (err) => {
                         if (err) {
                             return reject(`Error adding new guildServer: ${err.message}`);
                         }
@@ -83,7 +83,8 @@ export async function GetServers(guildId: string): Promise<Server[]> {
                 rows.forEach((row) => {
                     const server: Server = {
                         URL: row["URL"],
-                        Type: row["Type"]
+                        Type: row["Type"],
+                        Alias: row["Alias"]?? null
                     };
                     servers.push(server);
                 });

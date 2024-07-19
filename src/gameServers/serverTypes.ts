@@ -11,6 +11,7 @@ export enum ServerTypes {
 export interface Server {
     URL: string,
     Type: ServerTypes,
+    Alias?: string | null
 }
 export const functionMap: FunctionMap = {
     [ServerTypes.Terraria]: (serverUrl) => terrGetEmbed(serverUrl),
