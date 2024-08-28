@@ -1,7 +1,9 @@
-import {EmbedBuilder} from "discord.js";
+import {EmbedBuilder, InteractionReplyOptions} from "discord.js";
 
-export async function getEmbed(serverUrl: string): Promise<EmbedBuilder> {
+export async function getEmbed(serverUrl: string): Promise<InteractionReplyOptions> {
 
-    return new EmbedBuilder()
-        .setDescription("Whoops: Terraria servers aren't implemented yet.");
+    const embed = new EmbedBuilder()
+    embed.setTitle("Terraria is not supported yet")
+
+    return {embeds: [embed]};
 }

@@ -1,6 +1,6 @@
 import {
-    ActionRowBuilder,
-    ComponentType, EmbedBuilder,
+    ActionRowBuilder, ChatInputCommandInteraction,
+    ComponentType, EmbedBuilder, Interaction, InteractionReplyOptions, Message,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
@@ -19,7 +19,7 @@ export const McStatusCommand = new SlashCommandBuilder()
             .setAutocomplete(true)
     );
 
-export async function interactionMcStatus(interaction) {
+export async function interactionMcStatus(interaction): Promise<void> {
     if (interaction.commandName === 'server-status' && interaction.isChatInputCommand()) {
 
         const select = new StringSelectMenuBuilder()
@@ -27,40 +27,66 @@ export async function interactionMcStatus(interaction) {
             .setPlaceholder('Select a server')
         await AddServerSelectMenu(interaction.guildId, select);
 
-        const row = new ActionRowBuilder()
-            .addComponents(select);
 
-        let embed: EmbedBuilder = new EmbedBuilder();
+
+        // @ts-ignore
+        let reply: InteractionReplyOptions = {fetchReply: true};
+        let serverReply: InteractionReplyOptions = {};
         let server: Server = {URL: "", Type: ServerTypes.Minecraft}; //defining server just to make the compiler happy
 
-        try {
-            const defaultServer = await GetDefaultServer(interaction.guildId)
-            embed = await functionMap[defaultServer.Type](defaultServer.URL)
-        }
-        catch {
-            embed = new EmbedBuilder()
-                .setDescription('Could not find default server, Did you set one?');
-        }
         if (interaction.options.getString('server')) {
+            server =JSON.parse(interaction.options.getString('server'))
             try {
-                server =JSON.parse(interaction.options.getString('server'))
-                embed = await functionMap[server.Type](server.URL)
+                serverReply = await functionMap[server.Type](server.URL);
             }
-            catch {}
+            catch {
+                reply.embeds = [new EmbedBuilder().setDescription('Failed to fetch server data')]
+            }
+        }
+        else {
+            let defaultServer;
+            try {
+                defaultServer = await GetDefaultServer(interaction.guildId);
+                try {
+                    serverReply = await functionMap[defaultServer.Type](defaultServer.URL);
+                }
+                catch {
+                    reply.embeds = [new EmbedBuilder().setDescription('Failed to fetch server data')]
+                }
+                console.log(defaultServer.URL);
+
+            } catch (error) {
+                console.log('could not find default server');
+                reply.embeds = [new EmbedBuilder()
+                    .setDescription('Could not find default server, Did you add a server?')];
+
+            }
+
+
+        }
+        console.log({...reply,...serverReply});
+        const serverChoices = await GetServerChoices(interaction.guildId);
+        if (serverChoices.length > 1) {
+            const row = new ActionRowBuilder()
+                .addComponents(select);
+            // @ts-ignore
+            reply.components = [row];
+        }
+        const response = await interaction.reply({...reply,...serverReply});
+        if (serverChoices.length > 1){
+            const collector = response.createMessageComponentCollector({componentType: ComponentType.StringSelect , time: 3_600_000});
+
+            collector.on('collect', async i => {
+                const server: Server = JSON.parse(i.values[0])
+                try {
+                    serverReply = await functionMap[server.Type](server.URL);
+                }
+                catch {}
+
+                await i.update(serverReply);
+            });
         }
 
-
-        const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
-        });
-
-        const collector = response.createMessageComponentCollector({componentType: ComponentType.StringSelect , time: 3_600_000});
-
-        collector.on('collect', async i => {
-            const server: Server = JSON.parse(i.values[0])
-            await i.update({embeds: [await functionMap[server.Type](server.URL)]});
-        });
     }
     else if (interaction.commandName === 'server-status' && interaction.isAutocomplete()) {
         interaction.respond(await GetServerChoices(interaction.guildId))

@@ -12,7 +12,7 @@ export async function AddServerSelectMenu(guildId: string, selectMenuBuilder: Se
     options.forEach((server) => {
         selectMenuBuilder.addOptions(
             new StringSelectMenuOptionBuilder()
-                .setLabel(server.URL)
+                .setLabel(server.Alias ?? server.URL)
                 .setValue(JSON.stringify(server))
                 .setDescription(`${server.Type} server`)
         )
@@ -22,7 +22,7 @@ export async function GetServerChoices(guildId: string): Promise<ChoiceOption[]>
     const option: ChoiceOption[] = [];
     const servers = await GetServers(guildId);
     servers.forEach((server) => {
-        option.push({name: `${server.Alias?? ''}, ${server.URL}, ${server.Type}`, value: JSON.stringify(server)});
+        option.push({name: `${server.Alias ? server.Alias + ',' : ''} ${server.URL}, ${server.Type}`, value: JSON.stringify(server)});
     })
     return option;
 }

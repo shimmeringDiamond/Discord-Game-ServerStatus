@@ -35,5 +35,4 @@ client.on(Events.InteractionCreate, interactionAddServer);
 client.on(Events.InteractionCreate, interactionDefaultServer);
 client.on(Events.InteractionCreate, interactionDeleteServer);
 
-
 client.login(process.env.DISCORD_TOKEN);

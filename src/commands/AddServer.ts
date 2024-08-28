@@ -1,7 +1,7 @@
 import { PermissionFlagsBits, SlashCommandBuilder} from "discord.js";
 import {Server, ServerTypes} from "../gameServers/serverTypes.js";
-import { UpdateOrAddGuildServer} from "../storage/Db.js";
-import {ChoiceOption} from "./common";
+import {UpdateOrAddGuild, UpdateOrAddGuildServer} from "../storage/Db.js";
+import {ChoiceOption, GetServerChoices} from "./common.js";
 
 
 
@@ -39,6 +39,9 @@ export async function interactionAddServer(interaction) {
         };
         if (interaction.options.get('alias')) {
             server.Alias = interaction.options.getString('alias')
+        }
+        if ((await GetServerChoices(interaction.guildId)).length <= 0) {
+            await UpdateOrAddGuild(interaction.guildId, server.URL)
         }
         UpdateOrAddGuildServer(interaction.guildId, server)
             .then(() => {
