@@ -27,16 +27,11 @@ function loadEnvFile(filePath) {
     }
 }
 
-async function compileAndRun() {
+async function run() {
     try {
         // Load environment variables
         const envPath = path.join(__dirname, '.env');
         loadEnvFile(envPath);
-
-        // Compile TypeScript
-        console.log('Compiling TypeScript...');
-        await execAsync('npx tsc');
-        console.log('Compilation successful.');
 
         // Run compiled TypeScript
         const child = spawn('node', ['build/main.js'], {
@@ -52,4 +47,4 @@ async function compileAndRun() {
     }
 }
 
-compileAndRun();
+run();
