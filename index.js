@@ -35,7 +35,7 @@ async function compileAndRun() {
 
         // Compile TypeScript
         console.log('Compiling TypeScript...');
-        await execAsync('tsc');
+        await execAsync('npx tsc');
         console.log('Compilation successful.');
 
         // Run compiled TypeScript
