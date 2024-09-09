@@ -1,6 +1,5 @@
-import {ApplicationCommand, ApplicationCommandManager, REST, Routes} from 'discord.js';
+import { REST, Routes} from 'discord.js';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
-import {EmbedBuilder} from "discord.js";
 
 import {McStatusCommand, interactionMcStatus} from "./commands/ServerStatus.js";
 import {AddServerCommand, interactionAddServer} from "./commands/AddServer.js";
@@ -25,6 +24,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.on(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    console.log('successfully finished startup');
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

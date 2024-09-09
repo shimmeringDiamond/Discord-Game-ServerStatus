@@ -2,8 +2,13 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
+import {spawn} from "node:child_process";
 
 const execAsync = promisify(exec);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function loadEnvFile(filePath) {
     try {
@@ -33,12 +38,15 @@ async function compileAndRun() {
         await execAsync('tsc');
         console.log('Compilation successful.');
 
-        // Run the compiled JavaScript
-        console.log('Running the compiled JavaScript...');
-        const { stdout, stderr } = await execAsync('node build/main.js');
+        // Run compiled TypeScript
+        const child = spawn('node', ['build/main.js'], {
+            stdio: 'inherit',
+            env: process.env
+        });
 
-        if (stdout) console.log('Output:', stdout);
-        if (stderr) console.error('Errors:', stderr);
+        child.on('close', (code) => {
+            console.log(`Child process exited with code ${code}`);
+        });
     } catch (error) {
         console.error('An error occurred:', error);
     }
