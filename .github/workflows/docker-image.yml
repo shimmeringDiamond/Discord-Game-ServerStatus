@@ -22,6 +22,6 @@ jobs:
         TIMESTAMP=$(date +%s)
         docker build . --file Dockerfile --tag discord-minecraft-bot:$TIMESTAMP
         docker tag discord-minecraft-bot:$TIMESTAMP discord-minecraft-bot:latest
-        docker push discord-minecraft-bot:$TIMESTAMP
-        docker push discord-minecraft-bot:latest
+        docker push diamondcoder295/discord-minecraft-bot:$TIMESTAMP
+        docker push diamondcoder295/discord-minecraft-bot:latest
 
