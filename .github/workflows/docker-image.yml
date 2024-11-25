@@ -20,8 +20,8 @@ jobs:
     - name: Push Docker image
       run: |
         TIMESTAMP=$(date +%s)
-        docker build . --file Dockerfile --tag discord-minecraft-bot:$TIMESTAMP
-        docker tag discord-minecraft-bot:$TIMESTAMP discord-minecraft-bot:latest
+        docker build . --file Dockerfile --tag diamondcoder295/discord-minecraft-bot:$TIMESTAMP
+        docker tag diamondcoder295/discord-minecraft-bot:$TIMESTAMP diamondcoder295/discord-minecraft-bot:latest
         docker push diamondcoder295/discord-minecraft-bot:$TIMESTAMP
         docker push diamondcoder295/discord-minecraft-bot:latest
 
