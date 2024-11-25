@@ -14,7 +14,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+    - name: Push Docker image
       run: |
-        docker build . --file Dockerfile --tag discord-minecraft-bot:$(date +%s)
-        docker tag discord-minecraft-bot:$(date +%s) discord-minecraft-bot:latest
+        TIMESTAMP=$(date +%s)
+        docker build . --file Dockerfile --tag discord-minecraft-bot:$TIMESTAMP
+        docker tag discord-minecraft-bot:$TIMESTAMP discord-minecraft-bot:latest
+        docker push discord-minecraft-bot:$TIMESTAMP
+        docker push discord-minecraft-bot:latest
+
